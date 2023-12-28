@@ -1,0 +1,15 @@
+﻿	(******************************)
+	(*                            *)
+	(*     EXPORTED VARIABLES     *)
+	(*                            *)
+	(******************************)
+
+        VAR_GLOBAL
+	{G:"I_O_Digitali"}
+S2 AT %IX255.0 : BOOL;
+S3 AT %IX255.1 : BOOL;
+S4 AT %IX255.2 : BOOL;
+S5 AT %IX255.3 : BOOL;
+DO_0 AT %QX255.0 : BOOL;
+	END_VAR
+

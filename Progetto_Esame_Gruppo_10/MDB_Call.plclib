@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plcLibrary schemaVersion="2.3">
+	<lib version="1.0.1" name="MDB_Call" fullXml="true">
+		<descr/>
+		<libWorkspace>
+			<folder name="MDB_Call">
+				<Pou name="MDB_Call"/>
+			</folder>
+		</libWorkspace>
+		<globalVars/>
+		<retainVars/>
+		<constantVars/>
+		<functions/>
+		<functionBlocks>
+			<functionBlock name="MDB_Call" version="1.0.0" creationDate="0" lastModifiedDate="1557738157">
+				<vars>
+					<outputVars>
+						<var name="ChiamataTerminata" type="BOOL">
+							<descr>indica se la chiamata al modbus è stta eseguita e terminata</descr>
+							<initValue>False</initValue>
+						</var>
+						<var name="ErrorCode" type="UDINT">
+							<descr>codice errore, se presente</descr>
+							<initValue>0</initValue>
+						</var>
+					</outputVars>
+					<externalVars>
+						<var name="RS485" type="FILEP">
+							<descr>Punttore porta seriale</descr>
+						</var>
+						<var name="Funzione" type="USINT">
+							<descr>Funzione di lettura o scrittura mdb</descr>
+						</var>
+						<var name="Indirizzo" type="UINT">
+							<descr>Indirizzo del registro da leggere/scrivere</descr>
+						</var>
+						<var name="Valore" type="@USINT">
+							<descr>Puntatore al valore del registro da leggere/scrivere</descr>
+						</var>
+						<var name="N_reg" type="USINT">
+							<descr>Numero di variabili da scrivere/leggere (2 variabili x registro)</descr>
+						</var>
+					</externalVars>
+					<localVars>
+						<var name="MasterCall" type="ModbusMaster"/>
+					</localVars>
+				</vars>
+				<iecDeclaration active="FALSE"/>
+				<interfaces/>
+				<methods/>
+				<sourceCode type="ST">
+					<![CDATA[if MasterCall.Done then
+	MasterCall( Enable := false);
+	ChiamataTerminata := false;
+	ErrorCode := 0;
+
+end_if;
+
+if not( MasterCall.Done ) then
+	MasterCall(Enable := true,Type := 0, IFTime := 860,Timeout := 3000, Delay := 100,SpyOn:= True, Node :=1, File:= RS485,
+				FCode := Funzione, Address := Indirizzo, Points := N_reg, Buffer := Valore);
+
+	ChiamataTerminata := MasterCall.Done;
+	if MasterCall.Fault then
+		ErrorCode := SysGetLastError(TRUE);
+	end_if;
+
+end_if;
+]]>
+				</sourceCode>
+			</functionBlock>
+		</functionBlocks>
+		<programs/>
+		<macros/>
+		<structs/>
+		<typedefs/>
+		<enums/>
+		<subranges/>
+		<interfaces/>
+	</lib>
+</plcLibrary>
